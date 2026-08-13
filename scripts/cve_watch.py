@@ -199,7 +199,7 @@ def main() -> None:
         return
 
     current_rules_source = RULES_FILE.read_text()
-    subprocess.run(["git", "-C", str(REPO_ROOT), "checkout", "master"], check=True)
+    subprocess.run(["git", "-C", str(REPO_ROOT), "checkout", "main"], check=True)
     subprocess.run(["git", "-C", str(REPO_ROOT), "pull"], check=True)
 
     for cve in new_cves:
@@ -210,10 +210,10 @@ def main() -> None:
                 continue
             pr_url = open_pr_for_rule(cve, proposal)
             notify(f"[yousecure-scan] Novo PR proposto pro {cve['id']}: {pr_url}\nRevisar antes de dar merge.")
-            subprocess.run(["git", "-C", str(REPO_ROOT), "checkout", "master"], check=True)
+            subprocess.run(["git", "-C", str(REPO_ROOT), "checkout", "main"], check=True)
         except Exception as exc:  # noqa: BLE001 - one bad CVE shouldn't stop the batch
             print(f"Failed to process {cve['id']}: {exc}", file=sys.stderr)
-            subprocess.run(["git", "-C", str(REPO_ROOT), "checkout", "master"], check=True)
+            subprocess.run(["git", "-C", str(REPO_ROOT), "checkout", "main"], check=True)
 
     state["processed_cve_ids"] = sorted(processed)[-2000:]  # cap growth
     _save_state(state)
