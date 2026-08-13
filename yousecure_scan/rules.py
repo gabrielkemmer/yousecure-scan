@@ -156,7 +156,14 @@ RULES: list[Rule] = [
         "medium",
         re.compile(r"(?i)if\s*\(\s*(true|1)\s*\)\s*(\{|return)\s*.*?(auth|permission|isAdmin|authorized)", re.MULTILINE),
         (".js", ".jsx", ".ts", ".tsx", ".py"),
-    ),
+    ),    Rule(
+    "missing-auth-init-superuser",
+    "Application endpoint for initializing a superuser lacks authentication or setup token",
+    "high",
+    re.compile(r"(?i)(init|setup|create|register)[_-]?(super|admin|first)[_-]?(user|account)\s*\(.*(auth|token|check|verify)?\s*=\s*false", re.DOTALL),
+    (),
+),
+
 ]
 
 # Filenames that shouldn't exist in a committed repo at all - checked by
