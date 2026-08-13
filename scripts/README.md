@@ -27,10 +27,19 @@ standard library (`urllib`), same as the rest of this project.
 
 Needs `git` and the `gh` CLI (authenticated) on PATH.
 
-## Cron
+## Running it (systemd timer, not cron)
 
-```
-0 7 * * * cd /path/to/yousecure-scan && /usr/bin/python3 scripts/cve_watch.py >> /var/log/yousecure-scan-cve-watch.log 2>&1
+`yousecure-scan-cve-watch.service` + `.timer` run this daily via systemd
+instead of plain cron - `journalctl -u yousecure-scan-cve-watch` gets you
+logs/history for free, and a failed run is visible in `systemctl status`
+instead of silently vanishing into an unread mail spool.
+
+```bash
+sudo cp scripts/yousecure-scan-cve-watch.service scripts/yousecure-scan-cve-watch.timer /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable --now yousecure-scan-cve-watch.timer
+sudo systemctl start yousecure-scan-cve-watch.service   # run once now, don't wait for 07:00
+journalctl -u yousecure-scan-cve-watch -f
 ```
 
 State (which CVE IDs have already been processed) lives in
