@@ -180,7 +180,16 @@ def notify(message: str) -> None:
     if not number:
         print(message)
         return
-    sys.path.insert(0, str(REPO_ROOT.parent / "host_yousecure" / "vision_agents" / "runtime"))
+    # Reuses the existing host_yousecure WhatsApp sender rather than
+    # duplicating it - path isn't guessable from this repo's own layout
+    # (the two repos aren't siblings on the VPS: this one lives at
+    # /opt/yousecure-scan, host_yousecure at /home/host_yousecure), so it's
+    # explicit via env var instead of a REPO_ROOT.parent guess.
+    runtime_path = os.environ.get("HOST_YOUSECURE_RUNTIME_PATH")
+    if not runtime_path:
+        print(f"HOST_YOUSECURE_RUNTIME_PATH not set - printing instead: {message}")
+        return
+    sys.path.insert(0, runtime_path)
     try:
         import agent_runtime
         agent_runtime.send_whatsapp_message(number, message)
