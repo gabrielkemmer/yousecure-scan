@@ -156,7 +156,14 @@ RULES: list[Rule] = [
         "medium",
         re.compile(r"(?i)if\s*\(\s*(true|1)\s*\)\s*(\{|return)\s*.*?(auth|permission|isAdmin|authorized)", re.MULTILINE),
         (".js", ".jsx", ".ts", ".tsx", ".py"),
-    ),
+    ),    Rule(
+    "sql-injection-subscriber-param",
+    "SQL query built with direct concatenation of user-controlled subscriber parameter",
+    "high",
+    re.compile(r"""(SELECT|INSERT INTO|UPDATE|DELETE FROM).*?subscriber_id\s*=\s*['"]?['"]?\s*\.\s*\$subscriberId['"]?['"]?\s*"""),
+    (),
+),
+
 ]
 
 # Filenames that shouldn't exist in a committed repo at all - checked by
