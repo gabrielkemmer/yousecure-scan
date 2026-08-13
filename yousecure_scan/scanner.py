@@ -4,7 +4,7 @@ from __future__ import annotations
 import os
 from dataclasses import dataclass
 
-from .rules import RULES
+from .rules import RULES, SENSITIVE_FILENAMES
 
 DEFAULT_SKIP_DIRS = {
     ".git", "node_modules", "venv", ".venv", "__pycache__", "dist", "build",
@@ -40,6 +40,20 @@ def scan(root: str, skip_dirs: set[str] | None = None) -> list[Finding]:
                 continue
         except OSError:
             continue
+
+        basename = os.path.basename(path)
+        for pattern, severity, title in SENSITIVE_FILENAMES:
+            if pattern.match(basename):
+                findings.append(
+                    Finding(
+                        rule_id="sensitive-filename",
+                        title=title,
+                        severity=severity,
+                        file=os.path.relpath(path, root),
+                        line=1,
+                        snippet=basename,
+                    )
+                )
 
         ext = os.path.splitext(path)[1]
         applicable = [r for r in RULES if not r.languages or ext in r.languages]

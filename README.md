@@ -24,6 +24,17 @@ pip install "yousecure-scan[ai]"
 yousecure-scan /path/to/your/project
 ```
 
+Got a live site instead of the source — a vibecoded app you didn't build
+yourself, or one you don't have local access to? Scan the URL directly:
+
+```bash
+yousecure-scan --url https://example.com
+```
+
+This checks for exposed `.env`/`.git`, missing security headers (CSP, HSTS,
+X-Frame-Options), wildcard CORS, and a few other things that fast,
+AI-generated apps commonly ship to production with.
+
 ```bash
 # with AI-confirmed findings + suggested fixes (needs ANTHROPIC_API_KEY)
 export ANTHROPIC_API_KEY=sk-ant-...
@@ -48,6 +59,19 @@ yousecure-scan . --ai-review -o security-report.md
 - Flask apps running with `debug=True`
 - Wildcard CORS (`Access-Control-Allow-Origin: *`)
 - Django `SECRET_KEY` left at a placeholder value
+- Secrets bundled into client-side JS via `NEXT_PUBLIC_`/`VITE_`/`REACT_APP_` env vars
+- Supabase `service_role` key or `firebase-admin` referenced outside a server-only context
+- JWT verification allowing the `none` algorithm
+- Hardcoded live Stripe secret keys
+- Auth/permission checks hardcoded to always pass (`if (true) { ... isAdmin ... }`)
+- Committed `.env`, SSH private keys, `.pem` files, cloud service-account JSON
+
+`--url` (live-site mode) additionally checks for:
+
+- Exposed `/.env`, `/.git/config`, config/credential backup files
+- Missing security headers (CSP, HSTS, X-Frame-Options, X-Content-Type-Options)
+- Wildcard CORS on the live response
+- Server header disclosing software version
 
 Rules live in [`yousecure_scan/rules.py`](yousecure_scan/rules.py) — adding
 one is a single `Rule(...)` entry, no other code to touch.
@@ -63,6 +87,15 @@ Only confirmed findings make it into the final report.
 This step is entirely optional. Without `ANTHROPIC_API_KEY` set, the tool
 still works — you just get the raw pattern matches instead of a reviewed,
 lower-noise report.
+
+## Kept current with new CVEs
+
+A daily job ([`scripts/cve_watch.py`](scripts/cve_watch.py)) checks newly
+published CVEs relevant to this scanner's coverage, asks Gemini whether any
+of them justify a new detection rule, and opens a pull request with the
+proposed rule if so — **always as a PR for human review, never a direct
+commit to `master`**. See [`scripts/README.md`](scripts/README.md) for how
+it's wired up.
 
 ## Limitations
 
