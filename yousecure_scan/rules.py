@@ -156,7 +156,14 @@ RULES: list[Rule] = [
         "medium",
         re.compile(r"(?i)if\s*\(\s*(true|1)\s*\)\s*(\{|return)\s*.*?(auth|permission|isAdmin|authorized)", re.MULTILINE),
         (".js", ".jsx", ".ts", ".tsx", ".py"),
-    ),
+    ),    Rule(
+    "cors-misconfig-sensitive-headers",
+    "CORS misconfiguration exposes sensitive headers/tokens to arbitrary origins",
+    "high",
+    re.compile(r"""Access-Control-Allow-Origin['"]?\s*[:=]\s*['"]\*['"][\s\S]*?(Access-Control-Allow-Credentials|Access-Control-Expose-Headers)['"]?\s*[:=]\s*['"](true|Authorization|Set-Cookie|Cookie|X-Auth-Token)['"]"""),
+    ()
+)
+
 ]
 
 # Filenames that shouldn't exist in a committed repo at all - checked by
