@@ -156,7 +156,14 @@ RULES: list[Rule] = [
         "medium",
         re.compile(r"(?i)if\s*\(\s*(true|1)\s*\)\s*(\{|return)\s*.*?(auth|permission|isAdmin|authorized)", re.MULTILINE),
         (".js", ".jsx", ".ts", ".tsx", ".py"),
-    ),
+    ),    Rule(
+    "ssrf-url-from-user-input",
+    "Server-Side Request Forgery (SSRF) due to user-controlled URL",
+    "high",
+    re.compile(r"""(fetch|requests\.get|urllib\.request\.urlopen|http\.get)\s*\(.*(request\.args|request\.json|request\.form|input)\b"""),
+    (".py", ".js", ".ts", ".jsx", ".tsx"),
+),
+
 ]
 
 # Filenames that shouldn't exist in a committed repo at all - checked by
