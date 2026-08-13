@@ -156,7 +156,14 @@ RULES: list[Rule] = [
         "medium",
         re.compile(r"(?i)if\s*\(\s*(true|1)\s*\)\s*(\{|return)\s*.*?(auth|permission|isAdmin|authorized)", re.MULTILINE),
         (".js", ".jsx", ".ts", ".tsx", ".py"),
-    ),
+    ),    Rule(
+    "jwt-no-expiration-check",
+    "JWT token validation appears to bypass expiration checks",
+    "high",
+    re.compile(r"""(?i)jwt\.verify\([^)]*(ignoreExpiration|checkExpiration\s*:\s*false)"""),
+    (".js", ".ts", ".py", ".java", ".go"),
+),
+
 ]
 
 # Filenames that shouldn't exist in a committed repo at all - checked by
