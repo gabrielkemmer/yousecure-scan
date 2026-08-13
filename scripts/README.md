@@ -16,12 +16,14 @@ drafting a first pass) - a human still merges.
 ## Setup
 
 ```bash
-export GEMINI_API_KEY=...
-export GITHUB_TOKEN=...           # repo scope, used by `gh`
+export OPENROUTER_API_KEY=...     # calls google/gemini-2.5-flash through OpenRouter
+export GITHUB_TOKEN=...           # fine-grained PAT, Contents+PRs write on this repo only, used by `gh`
 export YOUSECURE_SCAN_REPO=owner/yousecure-scan
 export NOTIFY_WHATSAPP_NUMBER=5521...   # optional
-pip install google-generativeai
 ```
+
+No extra Python dependencies - the OpenRouter call goes through the
+standard library (`urllib`), same as the rest of this project.
 
 Needs `git` and the `gh` CLI (authenticated) on PATH.
 

@@ -14,7 +14,8 @@ Run via cron (see README in this scripts/ dir). State (which CVEs have
 already been processed) is kept in cve_watch_state.json next to this
 script, so re-running is a no-op unless there's something new.
 
-Required env vars: GEMINI_API_KEY, GITHUB_TOKEN (repo scope),
+Required env vars: OPENROUTER_API_KEY (calls Gemini via OpenRouter),
+GITHUB_TOKEN (fine-grained, Contents+PRs write on this repo only),
 YOUSECURE_SCAN_REPO ("owner/repo"), NOTIFY_WHATSAPP_NUMBER (optional).
 """
 from __future__ import annotations
@@ -44,7 +45,8 @@ RELEVANT_KEYWORDS = [
     "cors", "authentication bypass",
 ]
 
-GEMINI_MODEL = "gemini-2.5-flash"
+OPENROUTER_MODEL = "google/gemini-2.5-flash"
+OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
 
 
 def _load_state() -> dict:
@@ -85,12 +87,11 @@ def fetch_recent_cves(days: int = 1) -> list[dict]:
 def ask_gemini_for_rule(cve: dict, current_rules_source: str) -> dict | None:
     """Returns {"rule_code": "...", "rationale": "..."} or None if Gemini
     decides no new rule is warranted (e.g. too CVE-specific, not a
-    generalizable pattern, or already covered)."""
-    import google.generativeai as genai
+    generalizable pattern, or already covered).
 
-    genai.configure(api_key=os.environ["GEMINI_API_KEY"])
-    model = genai.GenerativeModel(GEMINI_MODEL)
-
+    Calls Gemini through OpenRouter (OpenAI-compatible /chat/completions),
+    not the Gemini SDK directly - OPENROUTER_API_KEY is an OpenRouter key,
+    not a Google AI Studio one."""
     prompt = f"""\
 You maintain the rule set for a regex-based security scanner (yousecure-scan).
 Here is the current rules.py content:
@@ -116,8 +117,21 @@ Respond with EXACTLY one of:
    and style) that could be appended to the RULES list, followed on a new
    line by "RATIONALE: <one sentence>".
 """
-    response = model.generate_content(prompt)
-    text = response.text.strip()
+    body = json.dumps({
+        "model": OPENROUTER_MODEL,
+        "messages": [{"role": "user", "content": prompt}],
+    }).encode()
+    req = urllib.request.Request(
+        OPENROUTER_URL,
+        data=body,
+        headers={
+            "Authorization": f"Bearer {os.environ['OPENROUTER_API_KEY']}",
+            "Content-Type": "application/json",
+        },
+    )
+    with urllib.request.urlopen(req, timeout=60) as resp:
+        payload = json.loads(resp.read())
+    text = payload["choices"][0]["message"]["content"].strip()
 
     if text == "NO_RULE_WARRANTED" or "NO_RULE_WARRANTED" in text.splitlines()[0]:
         return None
