@@ -156,7 +156,14 @@ RULES: list[Rule] = [
         "medium",
         re.compile(r"(?i)if\s*\(\s*(true|1)\s*\)\s*(\{|return)\s*.*?(auth|permission|isAdmin|authorized)", re.MULTILINE),
         (".js", ".jsx", ".ts", ".tsx", ".py"),
-    ),
+    ),    Rule(
+    "hardcoded-jwt-secret",
+    "Hardcoded JWT secret found (allows token forgery)",
+    "high",
+    re.compile(r"""(JWT_SECRET|SECRET_KEY)\s*[:=]\s*['"](your-secret-key-here|super-secret-development-key|changeme)['"]"""),
+    (".py", ".js", ".ts", ".jsx", ".tsx"),
+),
+
 ]
 
 # Filenames that shouldn't exist in a committed repo at all - checked by
