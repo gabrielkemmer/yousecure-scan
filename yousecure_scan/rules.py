@@ -156,7 +156,14 @@ RULES: list[Rule] = [
         "medium",
         re.compile(r"(?i)if\s*\(\s*(true|1)\s*\)\s*(\{|return)\s*.*?(auth|permission|isAdmin|authorized)", re.MULTILINE),
         (".js", ".jsx", ".ts", ".tsx", ".py"),
-    ),
+    ),    Rule(
+    "sql-injection-dynamic-table-name",
+    "SQL query built with dynamic table name (injection risk)",
+    "high",
+    re.compile(r"""(FROM|JOIN|UPDATE|DELETE\s+FROM)\s+['"`]?\$?\{\w+\}['"`]?\s*"""),
+    (".php", ".py", ".js", ".ts"),
+)
+
 ]
 
 # Filenames that shouldn't exist in a committed repo at all - checked by
