@@ -156,7 +156,14 @@ RULES: list[Rule] = [
         "medium",
         re.compile(r"(?i)if\s*\(\s*(true|1)\s*\)\s*(\{|return)\s*.*?(auth|permission|isAdmin|authorized)", re.MULTILINE),
         (".js", ".jsx", ".ts", ".tsx", ".py"),
-    ),
+    ),    Rule(
+    "insecure-deserialize-java-object",
+    "Insecure deserialization of Java objects (e.g., through readObject)",
+    "high",
+    re.compile(r"""(?i)\b(ObjectInputStream\.readObject|XMLEncoder\.readObject|Yaml\.load)\b"""),
+    (".java", ".yml", ".yaml"),
+)
+
 ]
 
 # Filenames that shouldn't exist in a committed repo at all - checked by
