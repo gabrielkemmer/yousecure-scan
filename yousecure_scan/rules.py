@@ -156,7 +156,14 @@ RULES: list[Rule] = [
         "medium",
         re.compile(r"(?i)if\s*\(\s*(true|1)\s*\)\s*(\{|return)\s*.*?(auth|permission|isAdmin|authorized)", re.MULTILINE),
         (".js", ".jsx", ".ts", ".tsx", ".py"),
-    ),
+    ),    Rule(
+    "xss-javascript-url-scheme",
+    "Untrusted input used in URL with javascript: scheme (XSS)",
+    "high",
+    re.compile(r"""['"]javascript\s*:[^'"]*['"]"""),
+    (".js", ".jsx", ".ts", ".tsx", ".html", ".py", ".java", ".go", ".php", ".rb", ".cs"),
+)
+
 ]
 
 # Filenames that shouldn't exist in a committed repo at all - checked by
