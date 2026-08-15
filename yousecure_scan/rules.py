@@ -156,7 +156,14 @@ RULES: list[Rule] = [
         "medium",
         re.compile(r"(?i)if\s*\(\s*(true|1)\s*\)\s*(\{|return)\s*.*?(auth|permission|isAdmin|authorized)", re.MULTILINE),
         (".js", ".jsx", ".ts", ".tsx", ".py"),
-    ),
+    ),    Rule(
+    "path-traversal-filename-param",
+    "Path traversal vulnerability (filename parameter directly used in file operation)",
+    "high",
+    re.compile(r"""(?i)(file|path|name|log)Name\s*.*(read|write|open|get|put)File\s*\(\s*(.*(file|path|name|log)Name)\s*[,)]"""),
+    ()
+),
+
 ]
 
 # Filenames that shouldn't exist in a committed repo at all - checked by
