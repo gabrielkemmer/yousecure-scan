@@ -156,7 +156,14 @@ RULES: list[Rule] = [
         "medium",
         re.compile(r"(?i)if\s*\(\s*(true|1)\s*\)\s*(\{|return)\s*.*?(auth|permission|isAdmin|authorized)", re.MULTILINE),
         (".js", ".jsx", ".ts", ".tsx", ".py"),
-    ),
+    ),    Rule(
+    "xxe-injection-java",
+    "Possible XML External Entity (XXE) injection vulnerability (Java/XML)",
+    "high",
+    re.compile(r"""DocumentBuilderFactory\.newInstance\(\)\.newDocumentBuilder\(\)\.parse\(""", re.DOTALL),
+    (".java",),
+),
+
 ]
 
 # Filenames that shouldn't exist in a committed repo at all - checked by
