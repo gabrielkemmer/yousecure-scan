@@ -156,7 +156,14 @@ RULES: list[Rule] = [
         "medium",
         re.compile(r"(?i)if\s*\(\s*(true|1)\s*\)\s*(\{|return)\s*.*?(auth|permission|isAdmin|authorized)", re.MULTILINE),
         (".js", ".jsx", ".ts", ".tsx", ".py"),
-    ),
+    ),    Rule(
+    "insecure-random-secret",
+    "Insecure random number generation used for security-sensitive values (e.g. session keys)",
+    "high",
+    re.compile(r"""(random|os\.urandom)\s*\(\s*\d+\s*\)"""),
+    (".py",),
+)
+
 ]
 
 # Filenames that shouldn't exist in a committed repo at all - checked by
