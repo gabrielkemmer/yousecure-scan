@@ -156,7 +156,14 @@ RULES: list[Rule] = [
         "medium",
         re.compile(r"(?i)if\s*\(\s*(true|1)\s*\)\s*(\{|return)\s*.*?(auth|permission|isAdmin|authorized)", re.MULTILINE),
         (".js", ".jsx", ".ts", ".tsx", ".py"),
-    ),
+    ),    Rule(
+    "sql-injection-numeric-id",
+    "Possible SQL injection by casting an ID to an integer without parameterization",
+    "high",
+    re.compile(r"""\b(GET|POST|REQUEST)\s*\[['"]\s*(id|pk|idx)\s*['"]\s*\]\s*\)\s*\)\s*.*?(int|Integer)\(['"]?"""),
+    (".php", ".py", ".js", ".ts", ".jsx", ".tsx"),
+)
+
 ]
 
 # Filenames that shouldn't exist in a committed repo at all - checked by
