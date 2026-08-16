@@ -156,7 +156,14 @@ RULES: list[Rule] = [
         "medium",
         re.compile(r"(?i)if\s*\(\s*(true|1)\s*\)\s*(\{|return)\s*.*?(auth|permission|isAdmin|authorized)", re.MULTILINE),
         (".js", ".jsx", ".ts", ".tsx", ".py"),
-    ),
+    ),    Rule(
+    "sql-injection-unsanitized-input",
+    "SQL query uses unsanitized input from request parameters (injection risk)",
+    "high",
+    re.compile(r"(?i)(SELECT|INSERT|UPDATE|DELETE|FROM|WHERE)\s+.*(\$_GET|\$_POST|\$_REQUEST|request\.args|request\.form|request\.GET|request\.POST|params\[?['\"])[^;]*;"),
+    (".php", ".py", ".js", ".ts", ".java", ".go"),
+)
+
 ]
 
 # Filenames that shouldn't exist in a committed repo at all - checked by
