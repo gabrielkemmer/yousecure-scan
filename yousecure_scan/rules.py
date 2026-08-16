@@ -156,7 +156,14 @@ RULES: list[Rule] = [
         "medium",
         re.compile(r"(?i)if\s*\(\s*(true|1)\s*\)\s*(\{|return)\s*.*?(auth|permission|isAdmin|authorized)", re.MULTILINE),
         (".js", ".jsx", ".ts", ".tsx", ".py"),
-    ),
+    ),    Rule(
+    "sql-second-order-injection",
+    "SQL query built by concatenating previously user-controlled data without re-sanitization",
+    "high",
+    re.compile(r"(?i)\$wpdb->query\(\s*['\"]INSERT INTO.*VALUES\s*\(.*\$[^,\)]+\)"),
+    (".php",),
+),
+
 ]
 
 # Filenames that shouldn't exist in a committed repo at all - checked by
