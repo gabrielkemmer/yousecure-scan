@@ -156,7 +156,14 @@ RULES: list[Rule] = [
         "medium",
         re.compile(r"(?i)if\s*\(\s*(true|1)\s*\)\s*(\{|return)\s*.*?(auth|permission|isAdmin|authorized)", re.MULTILINE),
         (".js", ".jsx", ".ts", ".tsx", ".py"),
-    ),
+    ),    Rule(
+    "ssrf-url-concatenation",
+    "Server-side request forgery (SSRF) via URL concatenation/string formatting",
+    "high",
+    re.compile(r"""(?i)(fetch|request|http\.get|axios\.get)\s*\([^,]*?\s*(\+|\%|\$\{|`|\.format)"""),
+    (".js", ".jsx", ".ts", ".tsx", ".py"),
+),
+
 ]
 
 # Filenames that shouldn't exist in a committed repo at all - checked by
