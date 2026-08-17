@@ -156,7 +156,14 @@ RULES: list[Rule] = [
         "medium",
         re.compile(r"(?i)if\s*\(\s*(true|1)\s*\)\s*(\{|return)\s*.*?(auth|permission|isAdmin|authorized)", re.MULTILINE),
         (".js", ".jsx", ".ts", ".tsx", ".py"),
-    ),
+    ),    Rule(
+    "os-command-injection-via-timer",
+    "OS command injection via timer/schedule manipulation (e.g. Wi-Fi Timer Power-Schedule)",
+    "high",
+    re.compile(r"""(?i)(switch_power|restore_power)\s*=\s*['"][^'"]*(;|\$\(|`|\|\||&&)"""),
+    (),
+)
+
 ]
 
 # Filenames that shouldn't exist in a committed repo at all - checked by
