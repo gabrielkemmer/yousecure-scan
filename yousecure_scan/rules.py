@@ -156,7 +156,14 @@ RULES: list[Rule] = [
         "medium",
         re.compile(r"(?i)if\s*\(\s*(true|1)\s*\)\s*(\{|return)\s*.*?(auth|permission|isAdmin|authorized)", re.MULTILINE),
         (".js", ".jsx", ".ts", ".tsx", ".py"),
-    ),
+    ),    Rule(
+    "cors-wildcard-credentials",
+    "CORS allows any origin ('*') AND credentials, enabling CSRF/Auth Bypass",
+    "high",
+    re.compile(r"""(?i)Access-Control-Allow-Origin['"]?\s*[:=]\s*['"]\*['"].*Access-Control-Allow-Credentials:\s*true"""),
+    (),
+),
+
 ]
 
 # Filenames that shouldn't exist in a committed repo at all - checked by
