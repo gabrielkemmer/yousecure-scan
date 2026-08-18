@@ -156,7 +156,14 @@ RULES: list[Rule] = [
         "medium",
         re.compile(r"(?i)if\s*\(\s*(true|1)\s*\)\s*(\{|return)\s*.*?(auth|permission|isAdmin|authorized)", re.MULTILINE),
         (".js", ".jsx", ".ts", ".tsx", ".py"),
-    ),
+    ),    Rule(
+    "sql-injection-get-param",
+    "SQL Injection vulnerability via GET parameter",
+    "high",
+    re.compile(r"""\$_GET\[['"]\w+['"]]\s*(?:==|=|!=|<>|<|>|<=|>=|LIKE|IN|\)|\s*(AND|OR|GROUP BY|ORDER BY|HAVING|UNION|SELECT|INSERT|UPDATE|DELETE|FROM|WHERE)\s)?"""),
+    (".php",),
+)
+
 ]
 
 # Filenames that shouldn't exist in a committed repo at all - checked by
