@@ -156,7 +156,14 @@ RULES: list[Rule] = [
         "medium",
         re.compile(r"(?i)if\s*\(\s*(true|1)\s*\)\s*(\{|return)\s*.*?(auth|permission|isAdmin|authorized)", re.MULTILINE),
         (".js", ".jsx", ".ts", ".tsx", ".py"),
-    ),
+    ),    Rule(
+    "xss-inline-onclick-data",
+    "Client-side template appears to embed data directly into an inline JavaScript event handler (e.g., onclick), risking XSS",
+    "high",
+    re.compile(r"""(?i)on(click|mouseover|mouseout|keydown|keyup)\s*=\s*['"][^'"]*(return|var)\s*(['"]|&quot;)\s*[^\s;]*\s*(\+|\.\w+\()"""),
+    (".html", ".htm", ".js", ".jsx", ".ts", ".tsx", ".vue"),
+),
+
 ]
 
 # Filenames that shouldn't exist in a committed repo at all - checked by
