@@ -156,7 +156,14 @@ RULES: list[Rule] = [
         "medium",
         re.compile(r"(?i)if\s*\(\s*(true|1)\s*\)\s*(\{|return)\s*.*?(auth|permission|isAdmin|authorized)", re.MULTILINE),
         (".js", ".jsx", ".ts", ".tsx", ".py"),
-    ),
+    ),    Rule(
+    "xss-eval-mermaid-frontmatter",
+    "Mermaid block with JavaScript front-matter leading to eval() before sanitization",
+    "high",
+    re.compile(r"""---\s*lang:\s*javascript\s*\n---\s*\n\s*```mermaid"""),
+    (".md", ".html", ".js", ".ts", ".jsx", ".tsx"),
+),
+
 ]
 
 # Filenames that shouldn't exist in a committed repo at all - checked by
