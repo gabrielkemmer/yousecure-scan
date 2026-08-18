@@ -156,7 +156,14 @@ RULES: list[Rule] = [
         "medium",
         re.compile(r"(?i)if\s*\(\s*(true|1)\s*\)\s*(\{|return)\s*.*?(auth|permission|isAdmin|authorized)", re.MULTILINE),
         (".js", ".jsx", ".ts", ".tsx", ".py"),
-    ),
+    ),    Rule(
+    "path-traversal-join-without-sanitize",
+    "Path traversal risk: joining request paths directly without sanitization",
+    "high",
+    re.compile(r"os\.path\.join\([^,]+,\s*request\.(path|url)\)"),
+    (".py",),
+),
+
 ]
 
 # Filenames that shouldn't exist in a committed repo at all - checked by
