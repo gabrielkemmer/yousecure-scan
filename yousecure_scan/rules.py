@@ -156,7 +156,14 @@ RULES: list[Rule] = [
         "medium",
         re.compile(r"(?i)if\s*\(\s*(true|1)\s*\)\s*(\{|return)\s*.*?(auth|permission|isAdmin|authorized)", re.MULTILINE),
         (".js", ".jsx", ".ts", ".tsx", ".py"),
-    ),
+    ),    Rule(
+    "ssrf-url-from-untrusted-source",
+    "URL constructed from untrusted input used in server-side request (SSRF risk)",
+    "high",
+    re.compile(r"""(request|req)\.(query|body|params|json)\.get\(['"]?\w+?url['"]?\)|\b(urlparse|urlsplit)\(['"]?\w+?url['"]?\)"""),
+    (".py", ".js", ".ts", ".jsx", ".tsx"),
+),
+
 ]
 
 # Filenames that shouldn't exist in a committed repo at all - checked by
