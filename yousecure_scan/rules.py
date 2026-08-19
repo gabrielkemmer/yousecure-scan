@@ -156,7 +156,14 @@ RULES: list[Rule] = [
         "medium",
         re.compile(r"(?i)if\s*\(\s*(true|1)\s*\)\s*(\{|return)\s*.*?(auth|permission|isAdmin|authorized)", re.MULTILINE),
         (".js", ".jsx", ".ts", ".tsx", ".py"),
-    ),
+    ),    Rule(
+    "sql-injection-filepath",
+    "SQL injection via file path in database operations (e.g. MOVE, COPY)",
+    "high",
+    re.compile(r"""(?i)\b(MOVE|COPY)\s+.*\bTO\s+['"]?([a-zA-Z0-9_/\.-]+)['"]?\s*FROM\s+['"]?([a-zA-Z0-9_/\.-]+)['"]?;\s*""", re.IGNORECASE),
+    (),
+)
+
 ]
 
 # Filenames that shouldn't exist in a committed repo at all - checked by
