@@ -156,7 +156,14 @@ RULES: list[Rule] = [
         "medium",
         re.compile(r"(?i)if\s*\(\s*(true|1)\s*\)\s*(\{|return)\s*.*?(auth|permission|isAdmin|authorized)", re.MULTILINE),
         (".js", ".jsx", ".ts", ".tsx", ".py"),
-    ),
+    ),    Rule(
+    "jwt-no-signature-validation",
+    "JSON Web Token (JWT) verification without signature validation (allows tampering)",
+    "high",
+    re.compile(r"""jwt\.decode\([^,]*,\s*options=\s*\{[^}]*['"]verify_signature['"]\s*:\s*False[^}]*\}"""),
+    (".py", ".js", ".ts", ".jsx", ".tsx"),
+),
+
 ]
 
 # Filenames that shouldn't exist in a committed repo at all - checked by
