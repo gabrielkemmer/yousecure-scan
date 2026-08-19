@@ -156,7 +156,14 @@ RULES: list[Rule] = [
         "medium",
         re.compile(r"(?i)if\s*\(\s*(true|1)\s*\)\s*(\{|return)\s*.*?(auth|permission|isAdmin|authorized)", re.MULTILINE),
         (".js", ".jsx", ".ts", ".tsx", ".py"),
-    ),
+    ),    Rule(
+    "jwt-unverified-alg-header",
+    "JWT verifier uses unverified 'alg' header to determine algorithm, enabling algorithm confusion attacks",
+    "high",
+    re.compile(r"""\.decode\(\s*token,\s*.*?,?\s*algorithms\s*=\s*\[?\s*header_data\[['"]alg['"]\]\s*\]?"""),
+    (".py",),
+)
+
 ]
 
 # Filenames that shouldn't exist in a committed repo at all - checked by
