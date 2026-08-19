@@ -156,7 +156,14 @@ RULES: list[Rule] = [
         "medium",
         re.compile(r"(?i)if\s*\(\s*(true|1)\s*\)\s*(\{|return)\s*.*?(auth|permission|isAdmin|authorized)", re.MULTILINE),
         (".js", ".jsx", ".ts", ".tsx", ".py"),
-    ),
+    ),    Rule(
+    "auth-stale-session-token",
+    "Authentication/session token not invalidated on user changes (e.g., deletion, role change)",
+    "high",
+    re.compile(r"""(refresh|access)\s*token.*(validate|verify|check)\s*\(.*(db|database|user|group)""", re.IGNORECASE),
+    (".js", ".ts", ".py"),
+),
+
 ]
 
 # Filenames that shouldn't exist in a committed repo at all - checked by
