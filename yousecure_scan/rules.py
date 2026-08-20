@@ -156,7 +156,14 @@ RULES: list[Rule] = [
         "medium",
         re.compile(r"(?i)if\s*\(\s*(true|1)\s*\)\s*(\{|return)\s*.*?(auth|permission|isAdmin|authorized)", re.MULTILINE),
         (".js", ".jsx", ".ts", ".tsx", ".py"),
-    ),
+    ),    Rule(
+    "unauthenticated-rce-via-terminal",
+    "Unauthenticated RCE via terminal endpoint with direct command execution",
+    "high",
+    re.compile(r"""(proc_open|system|passthru|shell_exec)\s*\([^)]*['"]?\s*(\$_POST|REQUEST|GET|file_get_contents|readfile)\b"""),
+    (".php",),
+)
+
 ]
 
 # Filenames that shouldn't exist in a committed repo at all - checked by
