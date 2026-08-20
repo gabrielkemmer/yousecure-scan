@@ -156,7 +156,14 @@ RULES: list[Rule] = [
         "medium",
         re.compile(r"(?i)if\s*\(\s*(true|1)\s*\)\s*(\{|return)\s*.*?(auth|permission|isAdmin|authorized)", re.MULTILINE),
         (".js", ".jsx", ".ts", ".tsx", ".py"),
-    ),
+    ),    Rule(
+    "sql-order-by-injection",
+    "SQL query uses unsanitized input in ORDER BY clause (injection risk)",
+    "high",
+    re.compile(r"(?i)ORDER BY\s+['\"]?%s['\"]?"),
+    (),
+)
+
 ]
 
 # Filenames that shouldn't exist in a committed repo at all - checked by
