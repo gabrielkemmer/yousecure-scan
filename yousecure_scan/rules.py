@@ -156,7 +156,14 @@ RULES: list[Rule] = [
         "medium",
         re.compile(r"(?i)if\s*\(\s*(true|1)\s*\)\s*(\{|return)\s*.*?(auth|permission|isAdmin|authorized)", re.MULTILINE),
         (".js", ".jsx", ".ts", ".tsx", ".py"),
-    ),
+    ),    Rule(
+    "sql-injection-email-like-param",
+    "SQL query appears to be built with string formatting using an email-like parameter, indicating potential SQL injection if input is not sanitized.",
+    "high",
+    re.compile(r"""(?i)(execute|cursor\.execute|query)\s*\(\s*(f['"]|['"].*%s.*['"]\s*%|['"].*\{\}.*['"]\s*\.format).*['"]\s*(email|subscriber|user)\s*=['"]"""),
+    (".py",),
+)
+
 ]
 
 # Filenames that shouldn't exist in a committed repo at all - checked by
