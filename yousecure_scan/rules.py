@@ -156,7 +156,14 @@ RULES: list[Rule] = [
         "medium",
         re.compile(r"(?i)if\s*\(\s*(true|1)\s*\)\s*(\{|return)\s*.*?(auth|permission|isAdmin|authorized)", re.MULTILINE),
         (".js", ".jsx", ".ts", ".tsx", ".py"),
-    ),
+    ),    Rule(
+    "path-traversal-download-param",
+    "Path traversal vulnerability in file download parameter",
+    "high",
+    re.compile(r"""(file|resource)Download\s*(\(|\[).*?(file|resource)Name\s*[:=]\s*['"]?[^'"]*?\.{2}/"""),
+    (),
+)
+
 ]
 
 # Filenames that shouldn't exist in a committed repo at all - checked by
