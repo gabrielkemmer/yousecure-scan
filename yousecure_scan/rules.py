@@ -156,7 +156,14 @@ RULES: list[Rule] = [
         "medium",
         re.compile(r"(?i)if\s*\(\s*(true|1)\s*\)\s*(\{|return)\s*.*?(auth|permission|isAdmin|authorized)", re.MULTILINE),
         (".js", ".jsx", ".ts", ".tsx", ".py"),
-    ),
+    ),    Rule(
+    "sql-identifier-interpolation",
+    "SQL identifier (schema/table/column name) interpolated without quoting (injection risk)",
+    "high",
+    re.compile(r"""(?i)(format|%)\s*['"]?[^{}%]*\b(schema|table|column)\b"""),
+    (".py",),
+),
+
 ]
 
 # Filenames that shouldn't exist in a committed repo at all - checked by
