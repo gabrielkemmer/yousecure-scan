@@ -156,7 +156,14 @@ RULES: list[Rule] = [
         "medium",
         re.compile(r"(?i)if\s*\(\s*(true|1)\s*\)\s*(\{|return)\s*.*?(auth|permission|isAdmin|authorized)", re.MULTILINE),
         (".js", ".jsx", ".ts", ".tsx", ".py"),
-    ),
+    ),    Rule(
+    "cgi-bin-command-injection",
+    "CGI script executing commands with unsanitized user input",
+    "high",
+    re.compile(r"\/cgi-bin\/.*?\.cgi.*?\b(system|exec|passthru|shell_exec|popen|proc_open)\b.*?[_a-z0-9]+"),
+    ()
+),
+
 ]
 
 # Filenames that shouldn't exist in a committed repo at all - checked by
