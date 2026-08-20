@@ -156,7 +156,14 @@ RULES: list[Rule] = [
         "medium",
         re.compile(r"(?i)if\s*\(\s*(true|1)\s*\)\s*(\{|return)\s*.*?(auth|permission|isAdmin|authorized)", re.MULTILINE),
         (".js", ".jsx", ".ts", ".tsx", ".py"),
-    ),
+    ),    Rule(
+    "os-command-injection",
+    "OS command injection via unsanitized input to shell execution",
+    "high",
+    re.compile(r"""(?i)(system|exec|popen|spawn)\s*\([^,]*?\b(input|get|request|param|data|mqtt)\b"""),
+    (),
+),
+
 ]
 
 # Filenames that shouldn't exist in a committed repo at all - checked by
