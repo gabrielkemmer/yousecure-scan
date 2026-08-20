@@ -156,7 +156,14 @@ RULES: list[Rule] = [
         "medium",
         re.compile(r"(?i)if\s*\(\s*(true|1)\s*\)\s*(\{|return)\s*.*?(auth|permission|isAdmin|authorized)", re.MULTILINE),
         (".js", ".jsx", ".ts", ".tsx", ".py"),
-    ),
+    ),    Rule(
+    "path-traversal-cleanup",
+    "Unsafe file deletion via os.path.join with attacker-controlled input",
+    "high",
+    re.compile(r"""(?i)os\.path\.join\([^,)]*,?\s*(?:file|path|name|id)\s*\)\s*(?:os\.remove|shutil\.rmtree)"""),
+    (".py",),
+),
+
 ]
 
 # Filenames that shouldn't exist in a committed repo at all - checked by
