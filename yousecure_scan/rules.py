@@ -156,7 +156,14 @@ RULES: list[Rule] = [
         "medium",
         re.compile(r"(?i)if\s*\(\s*(true|1)\s*\)\s*(\{|return)\s*.*?(auth|permission|isAdmin|authorized)", re.MULTILINE),
         (".js", ".jsx", ".ts", ".tsx", ".py"),
-    ),
+    ),    Rule(
+    "insecure-deserialize-dcu-style",
+    "Insecure deserialization (potential for privilege escalation if untrusted data is processed)",
+    "high",
+    re.compile(r"(?i)\b(deserialize|unpickle|load_yaml|read_object)\s*\("),
+    (),
+)
+
 ]
 
 # Filenames that shouldn't exist in a committed repo at all - checked by
